@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 //click the like thye button => auth middleware and then proceed with the next
 
 const auth = async (req,res,next) => {
+    // console.log(req.headers);
     try {
         const token = req.headers.authorization.split(" ")[1];
         const isCustomAuth = token.length < 500;

@@ -12,7 +12,7 @@ export const getPosts = async (req,res)=>{
 
 export const createPost = async (req,res) =>{
     const post = req.body;
-    const newPost = new PostMessage(post);
+    const newPost = new PostMessage({...post,creator: req.userId,createdAt: new Date().toISOString()});
 
 
     try {
@@ -58,7 +58,7 @@ export const likePost = async (req,res) =>{
     }
     if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send('No post with that id is found');
     const post = await PostMessage.findById(id);
-    const index = post.like.findIndex((id)=> id === String(req.userId));
+    const index = post.likes.findIndex((id)=> id === String(req.userId));
     if(index === -1){
         //like
         post.likes.push(req.userId);

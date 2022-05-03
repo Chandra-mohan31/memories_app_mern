@@ -10,10 +10,10 @@ import { createPost,updatePost } from '../../actions/posts';
 function Form({currentId,setCurrentId}) {
   const classes = useStyles();
   const post = useSelector((state)=>currentId ? state.posts.find((p)=> p._id === currentId) : null)
-
+  const user = JSON.parse(localStorage.getItem('profile'));
+  // console.log(user?.result?.name);
   const dispatch = useDispatch();
   const [postData,setPostData] = useState({
-    creator:'',
     title:'',
     message:'',
     tags:'',
@@ -25,22 +25,28 @@ function Form({currentId,setCurrentId}) {
       }
   },[post])
 
-  const handleSubmit = (e) =>{
-    //
+  const handleSubmit = async (e) =>{
+    
+    console.log({
+      ...postData,
+      name: user?.result?.name
+    })
     e.preventDefault();
-    if(currentId){
-    dispatch(updatePost(currentId,postData));
+    
+    if(!currentId){
+      dispatch(createPost({...postData,name: user?.result?.name}));
+      clear();
 
     }else{
-    dispatch(createPost(postData));
+      dispatch(updatePost(currentId,{...postData,name: user?.result?.name}));
+      clear();
+
     }
-    clear();
   }
   const clear = () =>{
     //
     setCurrentId(null);
     setPostData({
-      creator:'',
       title:'',
       message:'',
       tags:'',
@@ -48,11 +54,22 @@ function Form({currentId,setCurrentId}) {
     })
 
   }
+
+  if(!user?.result?.name){
+    return(
+      <Paper className={classes.paper}>
+        <Typography variant='h6' align="center">
+          Please Sign In to create your own memories and like others memories
+        </Typography>
+      </Paper>
+    )
+  }
+ 
   return (
     <Paper className={classes.paper}>
       <form autoComplete='off' noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
         <Typography variant='h6'>{currentId ? "Editing" : "Creating"} a memory</Typography>
-        <TextField name='creator' 
+        {/* <TextField name='creator' 
         variant="outlined"
          label="Creator" 
          fullWidth
@@ -63,7 +80,7 @@ function Form({currentId,setCurrentId}) {
               creator:e.target.value
             })
          }}
-          />
+          /> */}
            <TextField name='title' 
         variant="outlined"
          label="Title" 

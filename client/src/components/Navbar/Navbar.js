@@ -4,7 +4,8 @@ import memories from "../../images/memories.png";
 import useStyles from "./styles";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import { useDispatch } from 'react-redux';
-
+// import jwtDecode from 'jwt-decode';
+import decode from "jwt-decode";
 
 function Navbar() {
   const classes = useStyles();
@@ -15,6 +16,7 @@ function Navbar() {
   const history = useHistory();
   const logout = () => {
       dispatch({type:'LOGOUT'});
+      // localStorage.clear();
       history.push('/auth');
       setUser(null);
   }
@@ -24,6 +26,13 @@ function Navbar() {
     const token = user?.token;
     //JWT
 
+    if(token){
+      const decodedToken = decode(token);
+      console.log(decodedToken)
+      if(decodedToken.exp * 1000 < new Date().getTime()){
+        logout()
+      }
+    }
     setUser(JSON.parse(localStorage.getItem('profile')));
     
   },[location])
