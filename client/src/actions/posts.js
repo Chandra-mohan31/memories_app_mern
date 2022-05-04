@@ -2,7 +2,7 @@ import * as api from "../api";
 
 //Actions Creators
 
-import {FETCH_ALL,CREATE,DELETE,UPDATE} from "../constants/actionTypes"
+import {FETCH_ALL,CREATE,DELETE,UPDATE,FETCH_BY_SEARCH} from "../constants/actionTypes"
 
 export const getPosts = () => async (dispatch) => {
     try {
@@ -16,7 +16,17 @@ export const getPosts = () => async (dispatch) => {
 
     
 }
-
+export const getPostsBySearch = (searchQuery) => async(dispatch) => {
+    console.log(searchQuery)
+    try {
+        const {data:{data}} = await api.fetchPostsBySearch(searchQuery);
+        console.log(data);
+        const action = {type:FETCH_BY_SEARCH,payload: data}
+        dispatch(action)
+    } catch (error) {
+        console.log(error);
+    }
+}
 export const createPost = (post) => async(dispatch) => {
     try{
         const {data} = await api.createPost(post);

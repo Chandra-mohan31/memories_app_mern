@@ -28,7 +28,7 @@ function Navbar() {
 
     if(token){
       const decodedToken = decode(token);
-      console.log(decodedToken)
+      // console.log(decodedToken)
       if(decodedToken.exp * 1000 < new Date().getTime()){
         logout()
       }

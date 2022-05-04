@@ -10,7 +10,9 @@ API.interceptors.request.use((req)=>{
     return req;
 })
 // const url = "http://localhost:5000/posts";
-export const fetchPosts = () => API.get("posts");
+export const fetchPosts = () => API.get("/posts");
+
+export const fetchPostsBySearch = (searchQuery) => API.get(`/posts/search?searchQuery=${searchQuery.search || 'none'}&tags=${searchQuery.tags}`);
 
 export const createPost = (newPost) => API.post("/posts",newPost);
 

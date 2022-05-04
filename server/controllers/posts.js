@@ -70,3 +70,26 @@ export const likePost = async (req,res) =>{
     res.json(updatedPost);
 
 }
+//QUERY -> /posts?page=1 -> page=1
+//PARAMS -> /posts/123 -> id = 123
+export const getPostsBySearch = async (req,res) => {
+    const {searchQuery,tags} = req.query;
+    // console.log(req.query);
+    // console.log(searchQuery);
+    // console.log(tags);
+
+
+
+    try {
+        const title = new RegExp(searchQuery,'i');// i stands for ignore case
+
+        const searchedPosts = await PostMessage.find({ $or: [{ title },{tags: {$in: tags.split(',') }}]})
+        console.log(searchedPosts);
+        res.json({data: searchedPosts})
+    } catch (error) {
+        console.log(error)
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}

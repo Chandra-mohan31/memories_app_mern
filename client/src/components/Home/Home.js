@@ -4,7 +4,7 @@ import { useHistory,useLocation } from 'react-router-dom';
 import ChipInput from "material-ui-chip-input";
 import Posts from '../Posts/Posts';
 import Form from '../Form/Form';
-import {getPosts} from "../../actions/posts";
+import {getPosts,getPostsBySearch} from "../../actions/posts";
 import {useDispatch} from "react-redux";
 import Paginate from '../Pagination';
 
@@ -23,12 +23,22 @@ function Home() {
     
     const classes = useStyles();
     const dispatch = useDispatch();
+
+
+    // useEffect(()=>{
+    //   dispatch(getPosts());
+    // },[currentId,dispatch]);
+    
     useEffect(()=>{
       dispatch(getPosts());
     },[currentId,dispatch]);
+
+
+
     const [search,setSearch] = useState('');
     const [tags,setTags] = useState([]);
     const handleKeyPress = (e) =>{
+      // e.preventDefault();
       if(e.keyCode === 13){
         searchPost();
       }
@@ -39,8 +49,18 @@ function Home() {
     }
     const handleRemove = (tagToDelete) => setTags(tags.filter((tag)=> tag != tagToDelete));
     const searchPost = () => {
-      if(search.trim()){
+      // e.preventDefault();
+      if(search.trim() || tags){
         //dispatch -> fetch search post
+        // console.log({
+        //   search,
+        //   tags: tags.join(',')
+        // })
+        dispatch(getPostsBySearch({
+          search,
+          tags: tags.join(',')
+        }));
+        history.push(`/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
       }else{
         history.push("/")
       }
