@@ -1,16 +1,21 @@
 import React from 'react'
 import useStyles from "./styles";
-import {Card,CardActions,CardContent,CardMedia,Button,Typography} from "@material-ui/core";
+import {Card,CardActions,CardContent,CardMedia,Button,Typography, ButtonBase} from "@material-ui/core";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MoreHorizonIcon from "@material-ui/icons/MoreHoriz";
 import moment from "moment";
 import {useDispatch} from "react-redux";
 import {deletePost,likePost} from "../../../actions/posts";
+import {useHistory} from "react-router-dom"
 function Post({post,setCurrentId}) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("profile"));
+  const history = useHistory();
+  const openPost = () => {
+    history.push(`/posts/${post._id}`);
+  }
   const Likes = () =>{
     
     if(post.likes.length > 0){
@@ -30,8 +35,13 @@ function Post({post,setCurrentId}) {
     </>
   }
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} raised elevation={6}>
       <CardMedia className={classes.media} image={post.selectedFile} title={post.title} />
+      {/* <ButtonBase className={classes.cardAction} onClick={openPost}> */}
+      <div onClick={openPost} style={{
+        cursor:"pointer"
+      }}>
+
       <div className={classes.overlay}>
         <Typography variant='h6'>{post.name}</Typography>
         <Typography variant='body2'>{moment(post.createdAt).fromNow()}</Typography>
@@ -70,8 +80,10 @@ function Post({post,setCurrentId}) {
       <Typography  variant='body2' color="textSecondary" component='p' >{post.message}</Typography>
 
       </CardContent>
+      {/* </ButtonBase> */}
+      </div>
       
-      <CardActions className={classes.cardActions}>
+      <CardActions className={classes.cardAction}>
         <Button size="small" color="primary"  disabled={!user?.result}  onClick={()=>{
           dispatch(likePost(post._id))
         }}>

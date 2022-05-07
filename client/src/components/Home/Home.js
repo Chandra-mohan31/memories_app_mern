@@ -25,13 +25,11 @@ function Home() {
     const dispatch = useDispatch();
 
 
+    
+    
     // useEffect(()=>{
     //   dispatch(getPosts());
     // },[currentId,dispatch]);
-    
-    useEffect(()=>{
-      dispatch(getPosts());
-    },[currentId,dispatch]);
 
 
 
@@ -93,9 +91,13 @@ function Home() {
           <Button onClick={searchPost} variant="outlined" className={classes.searchButton} color="primary">Search</Button>
           </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
+        {
+          !searchQuery && !tags.length && (
             <Paper elevation={6}>
-              <Paginate />
+              <Paginate page={page} />
             </Paper>
+          )
+        }
           </Grid>
         </Grid>
       </Container>
